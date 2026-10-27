@@ -1,0 +1,1508 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head><base href="http://127.0.0.1:8001/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Boarding Houses</title>
+    <link rel="icon" type="image/png" href="/static/core/images/bhims-icon.png">
+    
+    <meta name="description" content="Find verified boarding houses near DMMMSU NLUC in Bacnotan, La Union. Compare rooms, prices, and walking distances from campus — built for BHIMS students and landlords.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="BHIMS NLUC Bacnotan">
+    <meta property="og:title" content="BHIMS - Boarding House Information Management System">
+    <meta property="og:description" content="Verified boarding houses near the DMMMSU NLUC campus — browse listings, message landlords, and book your stay.">
+    <meta name="theme-color" content="#14563c">
+    
+    <script>
+        (function () {
+            try {
+                // One-time reset after the black-theme breakage — restore teal paper default
+                if (localStorage.getItem('bhims-theme-version') !== 'teal-v2') {
+                    localStorage.setItem('bhims-theme', 'light');
+                    localStorage.setItem('bhims-theme-version', 'teal-v2');
+                }
+                var t = localStorage.getItem('bhims-theme') || 'light';
+                if (t !== 'dark' && t !== 'light') t = 'light';
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+    
+    <!-- Bootstrap CSS (local vendor copy - no internet required) -->
+    <link href="/static/vendor/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons (local) -->
+    <link rel="stylesheet" href="/static/vendor/bootstrap-icons.css">
+    <!-- Google Fonts: Urbanist (display) + Inter (body) - self-hosted -->
+    <link href="/static/vendor/fonts.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/core/css/Design%20Tokens.css">
+    
+    <!-- Design tokens: Design Tokens.css is the single source of truth -->
+    <style>
+        /* ---- Body ground: transparent — the .ios-scene layer owns the backdrop ---- */
+        body {
+            font-family: var(--font-body);
+            background: transparent;
+            min-height: 100vh;
+            color: var(--bhims-text);
+            margin: 0;
+            padding: 0;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        h1, h2, h3, h4, h5, h6,
+        .navbar-brand, .display-1, .display-2, .display-3,
+        .display-4, .display-5, .display-6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        /* Buttons, cards and form fields are owned by Campus Editorial.css
+           (the last identity layer). No local skin rules here anymore. */
+        .form-label { font-weight: 600; color: var(--bhims-text); }
+
+        /* ---- Badges: warm status colors ---- */
+        .badge { font-weight: 600; }
+        .bg-success { background-color: var(--bhims-badge-verified) !important; }
+        .bg-danger { background-color: var(--bhims-badge-rejected) !important; }
+        .bg-warning { background-color: var(--bhims-badge-pending) !important; }
+        .text-success { color: var(--bhims-teal-deep) !important; }
+        .text-danger { color: var(--bhims-badge-rejected) !important; }
+        .text-warning { color: var(--bhims-badge-pending) !important; }
+        .text-muted { color: var(--bhims-text-muted) !important; }
+
+        /* ---- Tables ---- */
+        .table { --bs-table-color: var(--bhims-text); --bs-table-bg: transparent; --bs-table-border-color: var(--bhims-border); }
+        .table > :not(caption) > * > * { border-bottom-color: var(--bhims-border); background-color: transparent; }
+
+        /* [a11y] Bootstrap ships a light-theme placeholder gray that lands on
+           dark glass inputs almost invisible (≈1.4:1). Use the themed token. */
+        input::placeholder, textarea::placeholder { color: var(--bhims-text-faint); opacity: 1; }
+        .table thead th { font-family: 'Inter', sans-serif; font-weight: 700; color: var(--bhims-text); }
+
+        /* ---- Links ---- */
+        a { color: var(--bhims-teal); }
+        a:hover { color: var(--bhims-teal-hover); }
+
+        /* Modal chrome only (the skin is Campus Editorial's) */
+        .modal-header { border-bottom: 1px solid var(--bhims-border); }
+        .modal-footer { border-top: 1px solid var(--bhims-border); }
+
+        /* ---- Status badge helper classes (warm palette) ---- */
+        .badge-bhims-verified { background: var(--bhims-badge-verified-bg); color: var(--bhims-badge-verified); }
+        .badge-bhims-pending { background: var(--bhims-badge-pending-bg); color: var(--bhims-badge-pending); }
+        .badge-bhims-rejected { background: var(--bhims-badge-rejected-bg); color: var(--bhims-badge-rejected); }
+
+        /* Page-header geometry is shared by every dashboard; skin is owned
+           by Premium Styles.css + Campus Editorial.css. */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+</style>
+
+    <!-- Toast notifications (BHIMS style) -->
+    <style>
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+        .bhims-toast {
+            width: min(400px, calc(100vw - 40px));
+            background: var(--bhims-glass-bg-primary);
+            -webkit-backdrop-filter: var(--bhims-glass-primary);
+            backdrop-filter: var(--bhims-glass-primary);
+            color: var(--bhims-text);
+            border-radius: 16px;
+            box-shadow: var(--bhims-glass-shadow), var(--bhims-glass-inner-glow);
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 18px;
+            position: relative;
+            overflow: hidden;
+            border: var(--bhims-glass-border);
+            border-left: 4px solid;
+            pointer-events: auto;
+            animation: bhimsSlideInRight 0.4s ease forwards;
+            font-family: 'Inter', sans-serif;
+        }
+        .bhims-toast.success { border-color: var(--bhims-moss); }
+        .bhims-toast.error { border-color: var(--bhims-badge-rejected); }
+        .bhims-toast.warning { border-color: var(--bhims-badge-pending); }
+        .bhims-toast.info { border-color: var(--bhims-info); }
+
+        .bhims-toast .toast-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 14px;
+            font-size: 22px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .bhims-toast.success .toast-icon { color: var(--bhims-moss); }
+        .bhims-toast.error .toast-icon { color: var(--bhims-badge-rejected); }
+        .bhims-toast.warning .toast-icon { color: var(--bhims-badge-pending); }
+        .bhims-toast.info .toast-icon { color: var(--bhims-info); }
+
+        .bhims-toast .toast-content { flex: 1; min-width: 0; }
+        .bhims-toast .toast-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--bhims-text);
+            font-size: 15.5px;
+            margin-bottom: 2px;
+        }
+        .bhims-toast .toast-message {
+            font-size: 13.5px;
+            color: var(--bhims-text-muted);
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .bhims-toast .toast-close {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            color: var(--bhims-text-muted);
+            padding: 0;
+            margin-left: 10px;
+            margin-top: -2px;
+            min-width: auto;
+            width: auto;
+            flex: 0 0 auto;
+            transition: color 0.3s;
+        }
+        .bhims-toast .toast-close:hover { color: var(--bhims-text); }
+
+        .bhims-toast .progress-track {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background: var(--ce-line, rgba(35, 43, 40, 0.10));
+        }
+        .bhims-toast .progress-bar { height: 100%; width: 100%; }
+        .bhims-toast.success .progress-bar { background-color: var(--bhims-moss); }
+        .bhims-toast.error .progress-bar { background-color: var(--bhims-badge-rejected); }
+        .bhims-toast.warning .progress-bar { background-color: var(--bhims-badge-pending); }
+        .bhims-toast.info .progress-bar { background-color: var(--bhims-info); }
+
+        @keyframes bhimsSlideInRight {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes bhimsSlideInTop {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bhimsFadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9); }
+        }
+        @keyframes bhimsTimer {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .bhims-toast:hover .progress-bar { animation-play-state: paused; }
+
+        @media screen and (max-width: 480px) {
+            #toast-container {
+                right: 0;
+                left: 0;
+                top: 10px;
+                width: 100%;
+                align-items: center;
+                padding: 0 10px;
+            }
+            .bhims-toast {
+                width: 100%;
+                max-width: 400px;
+                animation: bhimsSlideInTop 0.4s ease forwards;
+            }
+        }
+    </style>
+
+    <!-- Paper elevation system: layered z-levels, teal ink hairlines -->
+    <!-- Editorial note: surface skins live in Campus Editorial.css (loaded last).
+         What remains here is functional, not decorative: modal chrome, touch
+         targets, form-validation UI, reduced-motion guard. -->
+    <style>
+        /* Page containers sit directly on the paper ground */
+        .detail-page, .browse-page, .dashboard-page, .landlord-page, .student-page,
+        .property-management-page, .register-page, .messages-page, .booking-page,
+        .room-form-page, .form-section, .profile-page-wrap {
+            background: transparent !important;
+        }
+
+        /* ---- Modal chrome (surface owned by Campus Editorial) ---- */
+        .modal-content {
+            border-radius: calc(var(--bhims-radius) + 4px) !important;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+        }
+        .modal-backdrop {
+            -webkit-backdrop-filter: blur(8px) saturate(1.2) !important;
+            backdrop-filter: blur(8px) saturate(1.2) !important;
+            background: rgba(0, 0, 0, 0.35) !important;
+        }
+
+        /* ---- Touch devices: enforce 44px minimum tap targets (WCAG 2.5.5 / iOS HIG) ----
+           The visible focus ring is owned by Campus Editorial's K7 system. */
+        @media (pointer: coarse) {
+            .btn, .btn-bhims, .create-btn, .submit-btn, .btn-submit,
+            .btn-register-bhims, .btn-accept-bhims {
+                min-height: 44px;
+            }
+            .form-control, .form-select, .bhims-input, .bhims-textarea {
+                min-height: 44px;
+            }
+        }
+
+        /* ---- Touch devices: enforce 44px minimum tap targets (WCAG 2.5.5 / iOS HIG) ---- */
+        @media (pointer: coarse) {
+            .btn, .btn-bhims, .create-btn, .submit-btn, .btn-submit,
+            .btn-register-bhims, .btn-accept-bhims {
+                min-height: 44px;
+            }
+            .form-control, .form-select, .bhims-input, .bhims-textarea {
+                min-height: 44px;
+            }
+        }
+
+        /* ---- Inline form validation (client-side helper over Django's server rules) ---- */
+        .bhims-field-error {
+            color: var(--bhims-danger-text);
+            font-size: var(--fs-sm);
+            font-weight: 600;
+            margin-top: 0.35rem;
+        }
+        .bhims-error-summary {
+            background: var(--bhims-danger-bg);
+            border: 1px solid var(--bhims-danger-border);
+            border-left: 4px solid var(--bhims-danger-text);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            color: var(--bhims-danger-hover);
+        }
+        .bhims-error-summary:focus { outline: none; }
+        .bhims-error-summary a { color: var(--bhims-danger-text); font-weight: 600; }
+        form [aria-invalid="true"] {
+            border-color: var(--bhims-danger-text) !important;
+        }
+
+        /* ---- Reduced motion: calm everything down ---- */
+        @media (prefers-reduced-motion: reduce) {
+            body, .card, .stat-card, .listing-card, .house-card, .room-card,
+            .booking-card, .filter-card, .hero-card, .inquiry-item,
+            .landing-feature-card, .form-card, .bhims-login-card, .bhims-toast {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+
+    
+
+    <!-- BHIMS Premium Layer: pure visual polish, loads last -->
+    <link rel="stylesheet" href="/static/core/css/Premium%20Styles.css">
+    <!-- BHIMS iOS Glass Theme — loads very last, wins conflicts -->
+    <link rel="stylesheet" href="/static/core/css/iOS%20Theme.css">
+    <!-- Liquid Glass (iPhone-style materials + 120fps animation guardrails) -->
+    <link rel="stylesheet" href="/static/core/css/Liquid%20Glass.css?v=2">
+    <!-- Campus Editorial: final identity layer — Fraunces serif, warm paper,
+         hairline rules, full-strength photography. Overrides all glass layers. -->
+    <link rel="stylesheet" href="/static/core/css/Campus%20Editorial.css?v=22">
+</head>
+<body class="has-motion">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <!-- Toast notifications -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <!-- NAVBAR -->
+    
+<header class="bhims-topbar" id="bhimsTopbar">  <div class="bhims-topbar-inner">
+    <div class="bhims-topbar-left">
+    
+
+    <a href="/" class="bhims-brand" aria-label="BHIMS — go to homepage">
+      <img class="bhims-brand-mark" src="/static/core/images/logo_mark.png" alt="" aria-hidden="true">
+      <span class="bhims-brand-text">
+        <img class="bhims-word" src="/static/core/images/logo_text_dark.png"
+             alt="BHIMS — Boarding House Information Management System"
+             data-light-src="/static/core/images/logo_text_light.png"
+             data-dark-src="/static/core/images/logo_text_dark.png">
+      </span>
+    </a>
+    </div>
+
+    <div class="bhims-topbar-actions">
+      <nav class="bhims-nav" id="bhimsNav" aria-label="Primary">
+        
+          <a href="/students/login/" class="bhims-nav-link ">Sign in</a>
+          <a href="/landlords/login/" class="bhims-nav-link ">Landlord</a>
+        
+      </nav>
+
+      <button type="button" class="bhims-theme-btn" data-theme-switch aria-label="Switch between dark and light mode" title="Toggle dark / light mode">
+        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+        <i class="bi bi-sun" aria-hidden="true"></i>
+      </button>
+
+      
+      <button type="button" class="bhims-menu-toggle" id="bhimsMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="bhimsNav">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+      
+    </div>
+  </div>
+</header>
+
+<script>
+(function () {
+  // Theme-adaptive logo wordmark: swap white / dark-ink text when theme changes
+  var words = document.querySelectorAll('.bhims-word[data-light-src]');
+  if (words.length) {
+    var html = document.documentElement;
+    function syncLogo() {
+      var light = html.getAttribute('data-theme') !== 'dark';
+      words.forEach(function (img) {
+        var next = light ? img.getAttribute('data-light-src') : img.getAttribute('data-dark-src');
+        if (next && img.getAttribute('src') !== next) img.setAttribute('src', next);
+      });
+    }
+    syncLogo();
+    window.addEventListener('bhims-theme-change', syncLogo);
+  }
+
+  // Collapsible primary nav on narrow screens (<= 820px, matches Premium Styles.css)
+  var topbar = document.querySelector('.bhims-topbar');
+  var menuBtn = document.getElementById('bhimsMenuToggle');
+  if (topbar && menuBtn) {
+    menuBtn.addEventListener('click', function () {
+      var open = topbar.classList.toggle('is-open');
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+})();
+</script>
+
+
+    
+
+    <!-- Breadcrumb -->
+    
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                
+<li><span>Available Boarding Houses</span></li>
+
+            </ol>
+        </div>
+    </nav>
+    
+
+    <!-- MAIN PAGE CONTENT -->
+    <main id="main-content">
+        
+
+
+<style>
+    /* Center the page inside whichever shell hosts it */
+    .browse-page {
+        width: 100%;
+        max-width: var(--container-xl);
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-6) 4rem;
+    }
+    /* Inside the app shell, .app-content already pads and centers */
+    .app-content .browse-page {
+        max-width: none;
+        padding: 0 0 2rem;
+    }
+    @media (max-width: 640px) {
+        .browse-page { padding: var(--space-6) var(--space-4) 3rem; }
+    }
+</style>
+
+<div class="browse-page">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Browse</p>
+            <h1>Boarding houses near NLUC</h1>
+            <p>
+                
+                Filter by rent and barangay, then message the landlord from the listing.
+            </p>
+        </div>
+        
+        <a href="/students/register/" class="create-btn"><i class="bi bi-person-plus"></i> Create an Account</a>
+        
+    </div>
+
+    <div class="filter-card">
+        <form method="get" class="row g-3" id="filterForm">
+            <div class="col-md-4 col-lg-3">
+                <label for="id_price_min" class="form-label">Price min</label>
+                <input type="number" name="price_min" step="0.01" class="form-control" id="id_price_min">
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label for="id_price_max" class="form-label">Price max</label>
+                <input type="number" name="price_max" step="0.01" class="form-control" id="id_price_max">
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label for="id_room_type" class="form-label">Room type</label>
+                <input type="text" name="room_type" class="form-control" placeholder="e.g. Single, Studio, Bedspace..." id="id_room_type">
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label for="id_barangay" class="form-label">Barangay</label>
+                <select name="barangay" class="form-select" id="id_barangay">
+  <option value="" selected>Any</option>
+
+  <option value="Bacsil">Bacsil (1 jeepney ride)</option>
+
+  <option value="Baroro">Baroro (1 tricycle ride)</option>
+
+  <option value="Casiaman">Casiaman (1 tricycle ride)</option>
+
+  <option value="Legleg">Legleg (1 tricycle ride)</option>
+
+  <option value="Nagsimbaanan">Nagsimbaanan (12 min walk to NLUC)</option>
+
+  <option value="Poblacion">Poblacion (5 min walk to NLUC)</option>
+
+  <option value="Quirino">Quirino (1 jeepney ride)</option>
+
+  <option value="Raois">Raois (8 min walk to NLUC)</option>
+
+  <option value="Salincob">Salincob (10 min walk to NLUC)</option>
+
+  <option value="Sta. Cruz">Sta. Cruz (10 min walk to NLUC)</option>
+
+  <option value="Tammocalao">Tammocalao (1 tricycle ride)</option>
+
+  <option value="Zaragoza">Zaragoza (15 min walk to NLUC)</option>
+
+</select>
+            </div>
+            <div class="col-md-5">
+                <label for="id_amenities" class="form-label">Amenities</label>
+                <input type="text" name="amenities" class="form-control" id="id_amenities">
+            </div>
+            <div class="col-md-3">
+                <label for="id_sort" class="form-label">Sort</label>
+                <select name="sort" class="form-select" id="id_sort">
+  <option value="" selected>Default</option>
+
+  <option value="lowest_price">Lowest price</option>
+
+  <option value="newest">Newest</option>
+
+</select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary glass-btn-apply">Apply</button>
+                <a href="/listings/" class="filter-reset glass-btn-reset">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <p id="filterStatus" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+    <div class="listing-grid" id="listingGrid" aria-live="polite" aria-busy="false">
+        
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/36/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-11.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            <span class="gender-pill">Female Only</span>
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱1400
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Tres Marias Dormitory</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Casiaman (1 tricycle ride), Casiaman, near the elementary school
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Non-aircon Room</span>
+        </div>
+        <p class="card-description">Three-room dormitory for female boarders, a tricycle ride from campus. Includes water, electricity and a shared kitchen; laundry is ₱150 a …</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/35/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-10.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">3 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱1300
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Ilocandia Student Home</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Sta. Cruz (10 min walk to NLUC), Sta. Cruz, Bacnotan
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Aircon Room</span>
+        </div>
+        <p class="card-description">A student home ten minutes from the NLUC gate, with a study area, CCTV on the corridors and a no-visitors-after-8-PM house rule.</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/34/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-09.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱850
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Buenavista Bedspace</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Bacsil (1 jeepney ride), Bacsil, above the sari-sari store
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Bedspace (4 pax)</span>
+        </div>
+        <p class="card-description">The cheapest option in the list, one jeepney ride from campus. Bunk beds with individual lockers, shared comfort room and free drinking wat…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/33/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-08.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱1250
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">J&amp;J Room Rentals</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Zaragoza (15 min walk to NLUC), Zaragoza Road, Bacnotan
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Aircon Room</span>
+        </div>
+        <p class="card-description">Two well-kept rooms on Zaragoza Road, about fifteen minutes on foot from the NLUC gate. Electricity is metered separately; Wi-Fi is include…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/32/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-07.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">3 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱750
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Sunrise Boarding House</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Tammocalao (1 tricycle ride), Tammocalao proper
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Double Sharing</span>
+        </div>
+        <p class="card-description">East-facing rooms that catch the morning light, a tricycle ride from campus. Shared kitchen and laundry area, with water included.</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/31/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-06.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            <span class="gender-pill">Male Only</span>
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱700
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Mabini Men&#x27;s Lodging</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Quirino (1 jeepney ride), Mabini Extension, Quirino
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Bedspace (4 pax)</span>
+        </div>
+        <p class="card-description">Plain, cheap lodging for male students, one jeepney ride from NLUC. Good for boardmates who mostly need a bed, a desk and a place to wash c…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/30/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-05.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            <span class="gender-pill">Female Only</span>
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱800
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Del Pilar Ladies&#x27; Dorm</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Nagsimbaanan (12 min walk to NLUC), Del Pilar Street, Nagsimbaanan
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Non-aircon Room</span>
+        </div>
+        <p class="card-description">Ladies&#x27; dormitory twelve minutes from the campus, with a curfew at 9 PM and a resident house parent. Cooking is allowed in the common kitch…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/29/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-04.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">3 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱1100
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Casa Bacnotan Dormitory</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Baroro (1 tricycle ride), Baroro junction, Bacnotan
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Studio Type</span>
+        </div>
+        <p class="card-description">Newly built dormitory at the Baroro junction, one tricycle ride from NLUC. Every room is air-conditioned, with a study area per floor and g…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/28/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-03.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱700
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Reyes Boarding Inn</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Raois (8 min walk to NLUC), Raois East, near the chapel
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Double Sharing</span>
+        </div>
+        <p class="card-description">Family-run boarding inn a short walk from the NLUC main gate. Rent covers water and Wi-Fi; each room has its own comfort room and a study t…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/27/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-02.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            <span class="gender-pill">Female Only</span>
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱1200
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Auring&#x27;s Transient Home</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Poblacion (5 min walk to NLUC), Rizal Street, Poblacion
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Aircon Room</span>
+        </div>
+        <p class="card-description">A quiet house for female students along Rizal Street, five minutes on foot from campus. Rooms are air-conditioned on request, and the gate …</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/26/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/seed-house-01.jpg" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">2 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱650
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">Villa Elena Boarding House</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Salincob (10 min walk to NLUC), Purok 3, Salincob
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> Double Sharing</span>
+        </div>
+        <p class="card-description">Three rooms behind the Salincob covered court, a ten-minute walk from the NLUC gate. Water and electricity are included in the rent, and th…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+        
+
+<a class="listing-card bhims-press" href="/listings/1/">
+    <div class="card-image">
+        
+            <img src="/media/boarding_images/610c9981b86a42fcacd261e68b75c5d9.webp" alt="" loading="lazy" decoding="async">
+        
+        <div class="card-overlay" aria-hidden="true"></div>
+        <div class="card-badges">
+            
+            <span class="gender-pill"><i class="bi bi-shield-check"></i> Verified</span>
+            
+            
+            
+            <span class="room-type-pill">1 open</span>
+            
+        </div>
+        <div class="card-price-overlay">
+            
+            ₱1000
+            <small>from / month</small>
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="h5 card-title">cjade</h3>
+        <p class="card-location">
+            <i class="bi bi-geo-alt"></i>
+            Salincob (10 min walk to NLUC), salingcob
+        </p>
+        <div class="meta-row">
+            
+            <span class="room-type-pill"><i class="bi bi-grid-1x2"></i> 4 person</span>
+        </div>
+        <p class="card-description">Institut Le Rosey is an ultra-exclusive, prestigious private boarding school located in Rolle and Gstaad, Switzerland. Established in 1880,…</p>
+        <div class="card-actions">
+            
+            <span class="availability-badge"><i class="bi bi-check-circle"></i> Rooms available</span>
+            
+            <span class="btn-view-details">Details <i class="bi bi-arrow-right"></i></span>
+        </div>
+    </div>
+</a>
+
+    
+    
+    
+
+
+    </div>
+    <div id="listingSkeleton" class="listing-grid" style="display:none;" aria-hidden="true">
+        
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-img"></div>
+            <div class="sk-body">
+                <div class="skeleton sk-line"></div>
+                <div class="skeleton sk-line short"></div>
+                <div class="skeleton sk-pill" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-img"></div>
+            <div class="sk-body">
+                <div class="skeleton sk-line"></div>
+                <div class="skeleton sk-line short"></div>
+                <div class="skeleton sk-pill" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-img"></div>
+            <div class="sk-body">
+                <div class="skeleton sk-line"></div>
+                <div class="skeleton sk-line short"></div>
+                <div class="skeleton sk-pill" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-img"></div>
+            <div class="sk-body">
+                <div class="skeleton sk-line"></div>
+                <div class="skeleton sk-line short"></div>
+                <div class="skeleton sk-pill" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-img"></div>
+            <div class="sk-body">
+                <div class="skeleton sk-line"></div>
+                <div class="skeleton sk-line short"></div>
+                <div class="skeleton sk-pill" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+        <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton sk-img"></div>
+            <div class="sk-body">
+                <div class="skeleton sk-line"></div>
+                <div class="skeleton sk-line short"></div>
+                <div class="skeleton sk-pill" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+(function () {
+    var form = document.getElementById('filterForm');
+    var grid = document.getElementById('listingGrid');
+    var skeleton = document.getElementById('listingSkeleton');
+    var statusEl = document.getElementById('filterStatus');
+    if (!form || !grid || !skeleton) return;
+
+    var debounceTimer;
+    var controller;
+
+    function showSkeleton(show) {
+        skeleton.style.display = show ? 'grid' : 'none';
+        grid.style.display = show ? 'none' : 'grid';
+        grid.setAttribute('aria-busy', show ? 'true' : 'false');
+        skeleton.setAttribute('aria-hidden', show ? 'false' : 'true');
+    }
+
+    function fetchGrid(url, push) {
+        if (controller) controller.abort();
+        controller = new AbortController();
+        showSkeleton(true);
+        if (statusEl) statusEl.textContent = 'Loading listings…';
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' }, signal: controller.signal })
+            .then(function (r) { return r.text(); })
+            .then(function (html) {
+                grid.innerHTML = html;
+                showSkeleton(false);
+                if (push) history.pushState(null, '', url);
+                if (statusEl) {
+                    var count = grid.querySelectorAll('.listing-card').length;
+                    statusEl.textContent = count ? count + ' listing' + (count === 1 ? '' : 's') + ' found.' : 'No listings match your filters.';
+                }
+            })
+            .catch(function (e) {
+                if (e.name === 'AbortError') return;
+                showSkeleton(false);
+                if (statusEl) statusEl.textContent = 'Could not load listings. Showing last results.';
+            });
+    }
+
+    function buildUrl() {
+        var params = new URLSearchParams(new FormData(form));
+        // Remove empty params for cleaner URLs
+        for (var pair of Array.from(params.entries())) {
+            if (!pair[1]) params.delete(pair[0]);
+        }
+        var base = form.getAttribute('action') || window.location.pathname;
+        var qs = params.toString();
+        return qs ? base + '?' + qs : base;
+    }
+
+    form.addEventListener('submit', function (e) {
+        if (!window.fetch) return;
+        e.preventDefault();
+        fetchGrid(buildUrl(), true);
+    });
+
+    // The pager is inside the AJAX grid, so page links must be handled here
+    // too (and must not be swallowed by the grid's own clicks).
+    grid.addEventListener('click', function (e) {
+        var link = e.target.closest ? e.target.closest('[data-page-link]') : null;
+        if (!link || !window.fetch) return;
+        e.preventDefault();
+        fetchGrid(link.getAttribute('href'), true);
+        var top = grid.getBoundingClientRect().top + window.pageYOffset - 90;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+    });
+
+    // Instant (debounced 320ms) filtering as the user types
+    ['input', 'change'].forEach(function (evt) {
+        form.addEventListener(evt, function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () { fetchGrid(buildUrl(), true); }, 320);
+        });
+    });
+
+    window.addEventListener('popstate', function () {
+        fetchGrid(window.location.pathname + window.location.search, false);
+    });
+})();
+</script>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    
+<footer class="bhims-footer">
+  <div class="bhims-footer-inner">
+    <div>
+      <div class="bhims-footer-brand">
+        <img src="/static/core/images/logo_mark.png" alt="" aria-hidden="true">
+        <img class="bhims-word" src="/static/core/images/logo_text_dark.png"
+             alt="BHIMS — Boarding House Information Management System"
+             data-light-src="/static/core/images/logo_text_light.png"
+             data-dark-src="/static/core/images/logo_text_dark.png">
+      </div>
+      <p>Browse verified boarding houses near campus, message landlords directly, and manage your stay in one place.</p>
+      <p style="color:rgba(255,255,255,0.5);margin:1.25rem 0 0;">&copy; BHIMS &middot; DMMMSU–NLUC, Bacnotan</p>
+    </div>
+    <div>
+      <h3>Platform</h3>
+      <div class="bhims-footer-links">
+        <a href="/students/login/">Student portal</a>
+        <a href="/landlords/login/">Landlord portal</a>
+      </div>
+    </div>
+    <div>
+      <h3>Campus</h3>
+      <div class="bhims-footer-links">
+        <span>DMMMSU – North La Union Campus</span>
+        <span>Bacnotan, La Union, Philippines</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- Bootstrap JS (local) -->
+    <script src="/static/vendor/bootstrap.bundle.min.js"></script>
+
+    <!-- Toast notifications -->
+    <script>
+    (function () {
+        var ICONS = {
+            success: '<i class="bi bi-check-circle-fill"></i>',
+            error: '<i class="bi bi-x-circle-fill"></i>',
+            warning: '<i class="bi bi-exclamation-triangle-fill"></i>',
+            info: '<i class="bi bi-info-circle-fill"></i>'
+        };
+        var TITLES = { success: 'Success', error: 'Error', warning: 'Heads up', info: 'Notice' };
+
+        var container = document.getElementById('toast-container');
+        if (!container) return;
+
+        function createToast(type, title, message, duration) {
+            duration = duration || 5000;
+            if (!ICONS[type]) type = 'info';
+
+            var toast = document.createElement('div');
+            toast.className = 'bhims-toast ' + type;
+            toast.setAttribute('role', 'status');
+            toast.setAttribute('aria-live', 'polite');
+
+            toast.innerHTML =
+                '<div class="toast-icon">' + ICONS[type] + '</div>' +
+                '<div class="toast-content">' +
+                    '<div class="toast-title"></div>' +
+                    '<div class="toast-message"></div>' +
+                '</div>' +
+                '<button type="button" class="toast-close" aria-label="Close">&times;</button>' +
+                '<div class="progress-track"><div class="progress-bar"></div></div>';
+
+            toast.querySelector('.toast-title').textContent = title;
+            toast.querySelector('.toast-message').textContent = message;
+
+            var bar = toast.querySelector('.progress-bar');
+            bar.style.animation = 'bhimsTimer ' + duration + 'ms linear forwards';
+
+            container.appendChild(toast);
+
+            var timer = setTimeout(function () { removeToast(toast); }, duration);
+
+            toast.addEventListener('mouseenter', function () {
+                clearTimeout(timer);
+                bar.style.animationPlayState = 'paused';
+            });
+
+            toast.addEventListener('mouseleave', function () {
+                bar.style.animationPlayState = 'running';
+                timer = setTimeout(function () { removeToast(toast); }, duration);
+            });
+
+            toast.querySelector('.toast-close').addEventListener('click', function () {
+                removeToast(toast);
+            });
+        }
+
+        function removeToast(toast) {
+            toast.style.animation = 'bhimsFadeOut 0.4s ease forwards';
+            toast.addEventListener('animationend', function () { toast.remove(); }, { once: true });
+        }
+
+        window.createToast = createToast;
+        window.bhimsToast = createToast;
+
+        // Render Django flash messages as toasts
+        var pending = [];
+        
+
+        pending.forEach(function (item, index) {
+            setTimeout(function () {
+                createToast(item.type, TITLES[item.type] || 'Notice', item.message);
+            }, 120 * index);
+        });
+    })();
+    </script>
+
+    <!-- Client-side inline validation for forms opted in via data-validate.
+         Complements (never replaces) Django's server-side validation. -->
+    <script>
+    (function () {
+        var forms = document.querySelectorAll('form[data-validate]');
+        if (!forms.length) return;
+
+        function messageFor(el) {
+            var v = el.validity;
+            if (v.valueMissing) return 'This field is required.';
+            if (v.typeMismatch) return el.type === 'email' ? 'Enter a valid email address.' : 'Enter a valid value.';
+            if (v.patternMismatch) return 'Please match the requested format.';
+            if (v.tooShort) return 'Use at least ' + el.minLength + ' characters.';
+            if (v.tooLong) return 'Use no more than ' + el.maxLength + ' characters.';
+            if (v.rangeUnderflow || v.rangeOverflow) return 'This value is out of range.';
+            return 'Please check this field.';
+        }
+
+        function labelFor(el) {
+            if (el.labels && el.labels.length && el.labels[0].textContent.trim()) {
+                return el.labels[0].textContent.replace('*', '').trim();
+            }
+            return (el.name || 'This field').replace(/_/g, ' ');
+        }
+
+        function showError(el, text) {
+            el.setAttribute('aria-invalid', 'true');
+            var err = el.nextElementSibling;
+            if (!(err && err.classList && err.classList.contains('bhims-field-error'))) {
+                err = document.createElement('div');
+                err.className = 'bhims-field-error';
+                el.insertAdjacentElement('afterend', err);
+            }
+            err.textContent = text;
+        }
+
+        function clearError(el) {
+            el.removeAttribute('aria-invalid');
+            var err = el.nextElementSibling;
+            if (err && err.classList && err.classList.contains('bhims-field-error')) err.remove();
+        }
+
+        function buildSummary(form, bad) {
+            var old = form.querySelector('.bhims-error-summary');
+            if (old) old.remove();
+            if (!bad.length) return;
+            var box = document.createElement('div');
+            box.className = 'bhims-error-summary';
+            box.setAttribute('role', 'alert');
+            box.tabIndex = -1;
+            var title = document.createElement('h2');
+            title.className = 'h5 mb-2';
+            title.textContent = bad.length === 1 ? 'There is 1 problem with this form' :
+                'There are ' + bad.length + ' problems with this form';
+            box.appendChild(title);
+            var ul = document.createElement('ul');
+            ul.className = 'mb-0';
+            bad.forEach(function (el) {
+                if (!el.id) el.id = 'fld-' + (el.name || Math.random().toString(36).slice(2, 8));
+                var li = document.createElement('li');
+                var a = document.createElement('a');
+                a.href = '#' + el.id;
+                a.textContent = labelFor(el) + ': ' + messageFor(el);
+                li.appendChild(a);
+                ul.appendChild(li);
+            });
+            box.appendChild(ul);
+            form.insertBefore(box, form.firstChild);
+            box.focus();
+        }
+
+        Array.prototype.forEach.call(forms, function (form) {
+            var fields = Array.prototype.filter.call(
+                form.querySelectorAll('input, select, textarea'),
+                function (el) {
+                    var t = el.type;
+                    return t !== 'hidden' && t !== 'submit' && t !== 'button' &&
+                           t !== 'checkbox' && t !== 'radio';
+                }
+            );
+
+            fields.forEach(function (el) {
+                el.addEventListener('blur', function () {
+                    if (!el.checkValidity()) showError(el, messageFor(el));
+                });
+                el.addEventListener('input', function () {
+                    if (el.getAttribute('aria-invalid') === 'true' && el.checkValidity()) clearError(el);
+                });
+            });
+
+            form.addEventListener('submit', function (e) {
+                var bad = fields.filter(function (el) { return !el.checkValidity(); });
+                bad.forEach(function (el) { showError(el, messageFor(el)); });
+                buildSummary(form, bad);
+                if (bad.length) {
+                    e.preventDefault();
+                    bad[0].focus();
+                }
+            });
+        });
+    })();
+    </script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+    (function () {
+        var html = document.documentElement;
+        var savedTheme = 'light';
+        try { savedTheme = localStorage.getItem('bhims-theme') || 'light'; } catch (e) {}
+        html.setAttribute('data-theme', savedTheme);
+
+        // Wordmark images that must re-ink when the theme flips (navbar, sidebar, footer)
+        function syncLogos() {
+            var light = html.getAttribute('data-theme') !== 'dark';
+            document.querySelectorAll('.bhims-word[data-light-src]').forEach(function (img) {
+                var next = light ? img.getAttribute('data-light-src') : img.getAttribute('data-dark-src');
+                if (next && img.getAttribute('src') !== next) img.setAttribute('src', next);
+            });
+        }
+        syncLogos();
+        // Any widget may flip the theme (topbar/sidebar buttons); keep every wordmark in sync
+        window.addEventListener('bhims-theme-change', syncLogos);
+
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            try { localStorage.setItem('bhims-theme', theme); } catch (e) {}
+            document.querySelectorAll('[data-theme-toggle]').forEach(function (el) { el.checked = theme === 'dark'; });
+            syncLogos();
+            try { window.dispatchEvent(new Event('bhims-theme-change')); } catch (e) {}
+        }
+
+        // Checkbox-style switches
+        togglesInit();
+        function togglesInit() {
+            document.querySelectorAll('[data-theme-toggle]').forEach(function (toggle) {
+                toggle.checked = html.getAttribute('data-theme') === 'dark';
+                if (toggle.dataset.bhimsThemeBound) return;
+                toggle.dataset.bhimsThemeBound = '1';
+                toggle.addEventListener('change', function () {
+                    setTheme(this.checked ? 'dark' : 'light');
+                });
+            });
+        }
+        // Button-style toggles (navbar, sidebar, topbar)
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-theme-switch]');
+            if (!btn) return;
+            e.preventDefault();
+            setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+        // Sync any logos/toggles that were added after load
+        window.addEventListener('bhims-theme-request', function () {
+            togglesInit();
+            syncLogos();
+            document.querySelectorAll('[data-theme-toggle]').forEach(function (el) {
+                el.checked = html.getAttribute('data-theme') === 'dark';
+            });
+        });
+    })();
+    </script>
+
+    
+</body>
+</html>

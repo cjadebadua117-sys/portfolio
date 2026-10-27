@@ -1,0 +1,11 @@
+# The deploy copy that becomes the live site at cjadebadua117-sys.github.io.
+# It is its own git repository with its own history, so it stays out of this one.
+site/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+__pycache__/
+*.pyc
+.venv/

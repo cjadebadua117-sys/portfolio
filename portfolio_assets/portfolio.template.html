@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className='js';</script>
+<title>Christian Jade Badua — Portfolio</title>
+<meta name="description" content="Portfolio of Christian Jade Badua — Information Systems student at DMMMSU–NLUC Bacnotan. Builder of BHIMS (Boarding House Information Management System) and CIS-Prox (Student Presence &amp; Real-Time Locating System).">
+<meta name="author" content="Christian Jade Badua">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DARK GLASSMORPHISM DESIGN SYSTEM
+   ============================================================ */
+:root{
+  --bg:#070d18;
+  --glass:rgba(255,255,255,.055);
+  --glass-strong:rgba(255,255,255,.095);
+  --border:rgba(255,255,255,.09);
+  --border-strong:rgba(255,255,255,.17);
+  --highlight:inset 0 1px 0 rgba(255,255,255,.075);
+  --text:#e8eefb;
+  --muted:#9aa7b2;
+  --faint:#6b7a8c;
+  --blue:#3b82f6;
+  --blue-deep:#2563eb;
+  --cyan:#22d3ee;
+  --violet:#8b5cf6;
+  --green:#10b981;
+  --radius:20px;
+  --radius-lg:26px;
+  --shadow:0 30px 70px -35px rgba(0,0,0,.95);
+  --press-rest:cubic-bezier(.3,.7,.4,1);
+  --press-overshoot:cubic-bezier(.3,.7,.4,1.5);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:
+    radial-gradient(48vw 48vw at 88% -10%, rgba(59,130,246,.34), transparent 64%),
+    radial-gradient(46vw 46vw at -8% 98%, rgba(139,92,246,.28), transparent 64%),
+    radial-gradient(65vw 45vw at 50% 116%, rgba(20,184,166,.16), transparent 62%),
+    radial-gradient(circle at top right, #16233b, #070d18);
+  background-attachment:fixed;
+  color:var(--text);
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{width:min(1180px,92vw);margin-inline:auto}
+
+/* ---------- HEADER ---------- */
+header{
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(180deg,rgba(7,13,24,.82),rgba(7,13,24,.62));
+  backdrop-filter:blur(18px) saturate(180%);
+  -webkit-backdrop-filter:blur(18px) saturate(180%);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--highlight),0 14px 34px -22px rgba(0,0,0,.95);
+}
+nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+.brand{display:flex;align-items:center;text-decoration:none;font-weight:800;letter-spacing:-.02em}
+.brand small{display:block;font-size:.66rem;font-weight:500;color:var(--faint);letter-spacing:.14em;text-transform:uppercase}
+.navlinks{display:flex;gap:.35rem;align-items:center;list-style:none}
+.navlinks a{
+  text-decoration:none;font-size:.92rem;font-weight:500;color:var(--muted);
+  padding:.45rem .85rem;border-radius:999px;transition:color .2s,background .2s;
+}
+.navlinks a:hover{color:#fff;background:rgba(255,255,255,.07)}
+.menu-btn{display:none;background:none;border:1px solid var(--border-strong);border-radius:10px;color:var(--text);padding:.4rem .6rem;cursor:pointer}
+
+/* ---------- HERO ---------- */
+.hero{padding:clamp(3.5rem,9vw,6.5rem) 0 clamp(3rem,7vw,5rem);position:relative}
+h1{
+  font-size:clamp(2.1rem,5.2vw,3.7rem);
+  line-height:1.1;font-weight:800;letter-spacing:-.03em;
+  color:var(--text);
+  margin-bottom:1.25rem;max-width:20ch;
+}
+.lede{font-size:clamp(1.02rem,1.6vw,1.2rem);color:var(--muted);max-width:62ch;margin-bottom:2rem}
+.lede strong{color:var(--text);font-weight:600}
+.cta-row{display:flex;flex-wrap:wrap;gap:1.6rem;align-items:center;margin-bottom:3rem}
+.ghost-link{
+  text-decoration:none;font-weight:600;color:var(--text);font-size:.98rem;
+  border-bottom:1px solid rgba(255,255,255,.28);padding-bottom:2px;transition:border-color .2s,color .2s;
+}
+.ghost-link:hover{border-color:var(--cyan);color:var(--cyan)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:3rem}
+.stat{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.1rem 1.2rem;backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:var(--highlight);
+}
+.stat b{display:block;font-size:1.55rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.stat span{display:block;font-size:.84rem;color:var(--faint);line-height:1.4;letter-spacing:0}
+
+/* ---------- SECTIONS ---------- */
+section{padding:clamp(3rem,7vw,5.5rem) 0}
+.sec-head{margin-bottom:2.5rem;max-width:70ch}
+.sec-head h2{font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.6rem}
+.sec-head p{color:var(--muted)}
+.kicker{font-size:.74rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:.7rem}
+
+/* ---------- PROJECT CARDS ---------- */
+.project{
+  background:linear-gradient(150deg,rgba(255,255,255,.075),rgba(255,255,255,.03));
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-lg);
+  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  box-shadow:var(--highlight),var(--shadow);
+  overflow:hidden;margin-bottom:2.5rem;
+}
+.project + .project{margin-top:0}
+.pgrid{display:grid;grid-template-columns:1.05fr .95fr}
+.pgrid.rev .media{order:2}
+.media{padding:1.6rem;display:flex;flex-direction:column;gap:.9rem;background:rgba(0,0,0,.22)}
+.shot{
+  border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 24px 50px -28px rgba(0,0,0,.95);background:#0b1220;
+}
+.shot img{width:100%;height:auto;transition:transform .5s var(--press-rest)}
+.shot:hover img{transform:scale(1.02)}
+.thumbs{display:flex;gap:.6rem}
+.thumb{
+  flex:1;border-radius:10px;overflow:hidden;cursor:pointer;padding:0;
+  border:2px solid transparent;background:rgba(255,255,255,.05);
+  opacity:.62;transition:opacity .2s,border-color .2s,transform .2s;
+}
+.thumb img{width:100%;height:64px;object-fit:cover;object-position:top center}
+.thumb:hover{opacity:.9;transform:translateY(-2px)}
+.thumb.on{opacity:1;border-color:var(--blue)}
+.body{padding:clamp(1.5rem,3vw,2.4rem)}
+.badge{
+  display:inline-block;font-size:.74rem;font-weight:600;letter-spacing:.12em;
+  color:var(--faint);margin-bottom:.7rem;font-variant-numeric:tabular-nums;
+}
+.body h3{font-size:clamp(1.35rem,2.5vw,1.85rem);font-weight:800;letter-spacing:-.025em;margin-bottom:.3rem}
+.sub{color:var(--cyan);font-size:.9rem;font-weight:600;margin-bottom:1rem}
+.body p{color:var(--muted);font-size:.97rem;margin-bottom:1.2rem}
+.roles{display:grid;gap:.6rem;margin-bottom:1.4rem}
+.role{
+  display:grid;grid-template-columns:auto 1fr;gap:.75rem;align-items:start;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:12px;padding:.7rem .85rem;
+}
+.role b{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#93c5fd;padding-top:.15rem;min-width:74px}
+.role span{font-size:.89rem;color:var(--muted);line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem}
+.chip{
+  font-size:.75rem;font-weight:500;color:#cbd5e1;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  padding:.28rem .65rem;border-radius:8px;
+}
+.facts{display:flex;flex-wrap:wrap;gap:1.4rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.08)}
+.fact b{display:block;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.02em}
+.fact span{font-size:.72rem;color:var(--faint);text-transform:uppercase;letter-spacing:.09em}
+
+/* ---------- STACK ---------- */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.1rem;align-items:start}
+.stack-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.4rem;backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:var(--highlight);transition:transform .3s var(--press-rest),border-color .3s;
+}
+.stack-card:hover{transform:translateY(-4px);border-color:var(--border-strong)}
+.stack-card h4{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:.9rem;font-weight:700}
+.stack-card ul{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem}
+.stack-card li{font-size:.85rem;color:#cbd5e1;background:rgba(255,255,255,.055);border:1px solid var(--border);padding:.3rem .6rem;border-radius:8px}
+
+/* ---------- ABOUT ---------- */
+.about{display:grid;grid-template-columns:1.2fr .8fr;gap:1.6rem;align-items:start}
+.about p{color:var(--muted);margin-bottom:1rem}
+.about p strong{color:var(--text);font-weight:600}
+.note{
+  background:linear-gradient(150deg,rgba(59,130,246,.14),rgba(139,92,246,.09));
+  border:1px solid rgba(99,102,241,.3);border-radius:var(--radius);
+  padding:1.4rem;box-shadow:var(--highlight);
+}
+.note h4{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:#c7d2fe;margin-bottom:.75rem}
+.note ul{list-style:none;display:grid;gap:.55rem}
+.note li{font-size:.89rem;color:#cbd5e1;padding-left:1.1rem;position:relative}
+.note li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+
+/* ---------- CONTACT ---------- */
+.contact-card{
+  background:linear-gradient(150deg,rgba(255,255,255,.085),rgba(255,255,255,.035));
+  border:1px solid var(--border-strong);border-radius:var(--radius-lg);
+  backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  box-shadow:var(--highlight),var(--shadow);
+  padding:clamp(1.8rem,4vw,3rem);text-align:center;
+}
+.contact-card h2{font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.7rem}
+.contact-card p{color:var(--muted);max-width:56ch;margin:0 auto 1.8rem}
+.contact-actions{display:flex;gap:1.4rem;justify-content:center;align-items:center;flex-wrap:wrap}
+.mail{
+  text-decoration:none;font-weight:600;color:#93c5fd;font-size:.95rem;
+  border-bottom:1px solid rgba(147,197,253,.4);padding-bottom:2px;
+}
+.mail:hover{color:#fff;border-color:#fff}
+
+/* ---------- 3D TACTILE BUTTON ---------- */
+.realistic-btn{
+  position:relative;border:none;background:transparent;padding:0;cursor:pointer;
+  outline-offset:4px;transition:filter 250ms;user-select:none;display:inline-block;text-decoration:none;
+}
+.realistic-btn .btn-edge{
+  position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;
+  background:linear-gradient(to left,hsl(210,100%,16%) 0%,hsl(210,100%,32%) 8%,hsl(210,100%,32%) 92%,hsl(210,100%,16%) 100%);
+}
+.realistic-btn .btn-front{
+  display:block;position:relative;padding:12px 28px;border-radius:12px;
+  font-size:1.05rem;font-weight:600;color:#fff;background:hsl(210,100%,45%);
+  box-shadow:inset 0 1px 0 0 hsl(210,100%,65%),0 4px 6px -1px rgba(0,0,0,.2),0 2px 4px -1px rgba(0,0,0,.1);
+  transform:translateY(-6px);will-change:transform;
+  transition:transform 600ms cubic-bezier(.3,.7,.4,1);
+}
+.realistic-btn:hover{filter:brightness(110%)}
+.realistic-btn:hover .btn-front{transform:translateY(-8px);transition:transform 250ms cubic-bezier(.3,.7,.4,1.5)}
+.realistic-btn:active .btn-front{transform:translateY(-2px);transition:transform 34ms}
+.realistic-btn:focus:not(:focus-visible){outline:none}
+.realistic-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.realistic-btn.is-ghost .btn-edge{background:linear-gradient(to left,hsl(220,30%,14%) 0%,hsl(220,30%,26%) 8%,hsl(220,30%,26%) 92%,hsl(220,30%,14%) 100%)}
+.realistic-btn.is-ghost .btn-front{background:hsl(220,20%,32%);box-shadow:inset 0 1px 0 0 rgba(255,255,255,.22),0 4px 6px -1px rgba(0,0,0,.25)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:2rem 0 2.5rem;text-align:center;color:var(--faint);font-size:.85rem;
+}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center}
+
+/* ---------- REVEAL ---------- */
+/* scoped to .js so content is never invisible without JavaScript */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s var(--press-rest)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* ---------- FOCUS / A11Y ---------- */
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-9999px;top:0;background:#fff;color:#000;padding:.6rem 1rem;z-index:200}
+.skip:focus{left:1rem;top:1rem}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:960px){
+  .pgrid{grid-template-columns:1fr}
+  .pgrid.rev .media{order:0}
+  .about{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:720px){
+  .navlinks{
+    position:absolute;top:70px;right:0;left:0;flex-direction:column;align-items:stretch;
+    background:rgba(9,15,27,.96);backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--border);padding:.75rem;display:none;gap:.2rem;
+  }
+  .navlinks.open{display:flex}
+  .navlinks a{padding:.7rem .9rem;border-radius:10px}
+  .menu-btn{display:block}
+  .stats{grid-template-columns:1fr 1fr}
+  footer .wrap{justify-content:center;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+
+/* ============================================================
+   MOTION LAYER
+   Progressive enhancement only. Everything here is scoped to
+   .js, so with JavaScript off — or in the Canva build, which
+   strips scripts — the page stays a plain, fully visible
+   document. Nothing below is needed to read the content.
+   ============================================================ */
+/* motion:start */
+.js{scroll-behavior:auto}
+
+/* --- pinned hero (desktop, with room to breathe) ----------- */
+/* top:70px = header height, so the pinned copy sits exactly
+   where it sat before pinning starts and never slides under it. */
+@media (min-width:900px) and (min-height:700px){
+  .js .hero{height:185vh}
+  .js .hero>.wrap{
+    position:sticky;top:70px;min-height:calc(100vh - 70px);
+    display:flex;flex-direction:column;justify-content:center;
+    padding-top:clamp(0rem,2vh,2rem);
+  }
+}
+/* GSAP writes these every frame; a CSS transition would smear it */
+.js.has-motion .reveal{transition:none}
+
+/* --- reading progress -------------------------------------- */
+.progress{
+  position:fixed;top:0;left:0;width:100%;height:2px;z-index:130;
+  transform:scaleX(0);transform-origin:0 50%;pointer-events:none;
+  background:linear-gradient(90deg,var(--blue),var(--cyan) 55%,var(--violet));
+  box-shadow:0 0 14px rgba(34,211,238,.55);
+}
+
+/* --- preloader (hidden unless JS is running) --------------- */
+.preloader{position:fixed;inset:0;z-index:200;display:none;place-items:center;background:#060b14;will-change:transform}
+.js .preloader{display:grid}
+.preloader-inner{text-align:center;padding:0 1.5rem}
+.preloader-name{font-weight:800;font-size:clamp(1.05rem,2.6vw,1.4rem);letter-spacing:-.02em;color:var(--text)}
+.preloader-sub{margin-top:.4rem;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.preloader-count{margin-top:1.7rem;font-size:clamp(2.6rem,7vw,3.8rem);font-weight:800;letter-spacing:-.045em;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+.preloader-bar{width:min(240px,56vw);height:2px;margin:1.1rem auto 0;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.preloader-bar i{display:block;height:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+
+/* --- pointer aura (native cursor stays visible) ------------ */
+.cursor-aura,.cursor-dot{position:fixed;top:0;left:0;z-index:150;pointer-events:none;border-radius:50%;opacity:0;will-change:transform}
+.cursor-aura{
+  width:44px;height:44px;margin:-22px 0 0 -22px;
+  border:1px solid rgba(255,255,255,.32);background:rgba(34,211,238,.05);
+  transition:width .3s var(--press-rest),height .3s var(--press-rest),margin .3s var(--press-rest),background .3s,border-color .3s;
+}
+.cursor-aura.is-active{width:74px;height:74px;margin:-37px 0 0 -37px;border-color:rgba(34,211,238,.75);background:rgba(34,211,238,.11)}
+.cursor-dot{width:4px;height:4px;margin:-2px 0 0 -2px;background:var(--cyan);box-shadow:0 0 10px rgba(34,211,238,.9)}
+@media (min-width:900px) and (hover:hover) and (pointer:fine){
+  html.has-cursor .cursor-aura,html.has-cursor .cursor-dot{opacity:1}
+}
+@media (hover:none),(pointer:coarse){.cursor-aura,.cursor-dot{display:none}}
+
+/* --- header behaviour -------------------------------------- */
+header{transition:transform .45s var(--press-rest)}
+header.is-hidden{transform:translateY(-101%)}
+
+/* --- marquee divider --------------------------------------- */
+.marquee{overflow:hidden;padding:.95rem 0;border-block:1px solid var(--border);background:rgba(255,255,255,.018)}
+.marquee-track{display:flex;width:max-content;animation:marquee 32s linear infinite;will-change:transform}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-group{display:flex;align-items:center;gap:2.2rem;padding-right:2.2rem}
+.marquee span{font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.marquee b{flex:none;width:5px;height:5px;border-radius:50%;background:var(--cyan);opacity:.65}
+@keyframes marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+
+/* --- media: GSAP owns the transforms now ------------------- */
+.js .shot img{transition:none}
+
+/* --- reduced motion: static page, no pins, no loops -------- */
+@media (prefers-reduced-motion:reduce){
+  .js .reveal{opacity:1;transform:none}
+  .js .hero{height:auto}
+  .js .hero>.wrap{position:static;min-height:0;padding-top:0}
+  .js .preloader{display:none!important}
+  .marquee-track{animation:none}
+  header{transition:none}
+  header.is-hidden{transform:none}
+}
+/* motion:end */
+</style>
+</head>
+<body>
+
+<!-- motion:start -->
+<div class="preloader" aria-hidden="true">
+  <div class="preloader-inner">
+    <div class="preloader-name">Christian Jade Badua</div>
+    <div class="preloader-sub">Information Systems</div>
+    <div class="preloader-count">0</div>
+    <div class="preloader-bar"><i></i></div>
+  </div>
+</div>
+<div class="progress" aria-hidden="true"></div>
+<div class="cursor-aura" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<!-- motion:end -->
+
+<a class="skip" href="#work">Skip to work</a>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top">
+        <span>Christian Jade Badua<small>Information Systems</small></span>
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">Menu</button>
+      <ul class="navlinks" id="navLinks">
+        <li><a href="#work">Systems</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <h1>I build Django systems,<br>database first.</h1>
+      <p class="lede">
+        I'm <strong>Christian Jade Badua</strong>, an Information Systems student at
+        <strong>DMMMSU–NLUC Bacnotan</strong>. I work on role-based web systems for student housing
+        and campus attendance — models and migrations, the views that guard them, and the screens
+        people actually use.
+      </p>
+      <div class="cta-row">
+        <a class="realistic-btn" href="#work">
+          <span class="btn-edge"></span>
+          <span class="btn-front">See my systems</span>
+        </a>
+        <a class="ghost-link" href="#contact">Get in touch &rarr;</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b>2</b><span>Systems built</span></div>
+        <div class="stat"><b>73</b><span>Automated tests</span></div>
+        <div class="stat"><b>3</b><span>Roles per system</span></div>
+        <div class="stat"><b>2</b><span>MySQL schemas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SYSTEMS ============ -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">Selected work</div>
+        <h2>Two systems, built end to end</h2>
+        <p>Both are Django applications running on MySQL via XAMPP, with a shared glassmorphism
+           design language — models, migrations, roles and screens all written by me.</p>
+      </div>
+
+      <!-- ---------- PROJECT 1: BHIMS ---------- -->
+      <article class="project reveal">
+        <div class="pgrid">
+          <div class="media">
+            <figure class="shot">
+              <img id="bhims-main" src="__IMG_bhims-landing__"
+                   alt="BHIMS landing page showing boarding houses near DMMMSU–NLUC"
+                   width="1280" height="889">
+            </figure>
+            <div class="thumbs" data-for="bhims-main">
+              <button class="thumb on" data-src="__IMG_bhims-landing__" aria-label="Show landing page">
+                <img src="__IMG_bhims-landing__" alt="">
+              </button>
+              <button class="thumb" data-src="__IMG_bhims-listings__" aria-label="Show listings page">
+                <img src="__IMG_bhims-listings__" alt="">
+              </button>
+            </div>
+          </div>
+
+          <div class="body">
+            <span class="badge primary">01</span>
+            <h3>BHIMS</h3>
+            <div class="sub">Boarding House Information Management System</div>
+            <p>
+              A boarding house listing and booking system for students near campus. Landlords post
+              listings with photos, rates and amenities; admins moderate every listing before it goes
+              public; students filter by barangay and price, message landlords in a thread, and get
+              confirmed bookings.
+            </p>
+
+            <div class="roles">
+              <div class="role"><b>Student</b><span>Register, browse &amp; filter listings by barangay, price and amenities, send inquiries, chat with landlords, receive confirmed bookings.</span></div>
+              <div class="role"><b>Landlord</b><span>Manage boarding houses and rooms — photos, rates, capacity, amenities — reply to inquiries and accept students.</span></div>
+              <div class="role"><b>Admin</b><span>Approve or reject listings, manage landlords, students and barangays, review reports, view analytics, edit site settings.</span></div>
+            </div>
+
+            <div class="chips">
+              <span class="chip">Python 3.14</span>
+              <span class="chip">Django 6.0</span>
+              <span class="chip">MySQL / MariaDB</span>
+              <span class="chip">XAMPP</span>
+              <span class="chip">Bootstrap 5</span>
+              <span class="chip">Glassmorphism design system</span>
+              <span class="chip">Pillow</span>
+              <span class="chip">Power BI export</span>
+            </div>
+
+            <div class="facts">
+              <div class="fact"><b>14</b><span>Models</span></div>
+              <div class="fact"><b>92</b><span>View functions</span></div>
+              <div class="fact"><b>73</b><span>Tests</span></div>
+              <div class="fact"><b>4</b><span>Diagrams</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ---------- PROJECT 2: CIS-Prox ---------- -->
+      <article class="project reveal">
+        <div class="pgrid rev">
+          <div class="media">
+            <figure class="shot">
+              <img id="cis-main" src="__IMG_cis-dashboard__"
+                   alt="CIS-Prox sign-in dashboard with room selection"
+                   width="1280" height="889">
+            </figure>
+            <div class="thumbs" data-for="cis-main">
+              <button class="thumb on" data-src="__IMG_cis-dashboard__" aria-label="Show dashboard">
+                <img src="__IMG_cis-dashboard__" alt="">
+              </button>
+              <button class="thumb" data-src="__IMG_cis-home__" aria-label="Show landing page">
+                <img src="__IMG_cis-home__" alt="">
+              </button>
+            </div>
+          </div>
+
+          <div class="body">
+            <span class="badge second">02</span>
+            <h3>CIS-Prox</h3>
+            <div class="sub">Student Presence &amp; Real-Time Locating System</div>
+            <p>
+              A campus attendance and presence system. Students sign in and out of rooms and
+              laboratories, classmates see who is currently where, and instructors get dashboards for
+              class attendance, reports and broadcasts. Privacy controls let students decide who can
+              see them, and a campus Wi-Fi gate keeps check-ins tied to the actual campus network.
+            </p>
+
+            <div class="roles">
+              <div class="role"><b>Student</b><span>Register, enroll in a section, sign in and out of rooms, track activity hours, manage privacy and find classmates.</span></div>
+              <div class="role"><b>Instructor</b><span>Class attendance dashboards, Flag Raising Ceremony records, laboratory history, broadcasts to sections or rooms.</span></div>
+              <div class="role"><b>Admin</b><span>User, instructor and system management, reports, cleaning schedules and an auto-logout middleware for shared consoles.</span></div>
+            </div>
+
+            <div class="chips">
+              <span class="chip">Python 3.14</span>
+              <span class="chip">Django 5.2</span>
+              <span class="chip">MySQL / MariaDB</span>
+              <span class="chip">Custom DB backend</span>
+              <span class="chip">Glassmorphism design system</span>
+              <span class="chip">3D tactile UI</span>
+              <span class="chip">Middleware</span>
+              <span class="chip">Session auth</span>
+            </div>
+
+            <div class="facts">
+              <div class="fact"><b>22</b><span>Tables</span></div>
+              <div class="fact"><b>27</b><span>Templates</span></div>
+              <div class="fact"><b>19</b><span>Migrations</span></div>
+              <div class="fact"><b>3</b><span>Roles</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- motion:start -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <div class="marquee-group">
+        <span>Django</span><b></b><span>Python</span><b></b><span>MySQL</span><b></b><span>MariaDB</span><b></b><span>Bootstrap</span><b></b><span>XAMPP</span><b></b><span>ORM</span><b></b><span>Migrations</span><b></b><span>SQL</span><b></b><span>Git</span><b></b><span>Power BI</span><b></b><span>Accessibility</span><b></b>
+      </div>
+      <div class="marquee-group">
+        <span>Django</span><b></b><span>Python</span><b></b><span>MySQL</span><b></b><span>MariaDB</span><b></b><span>Bootstrap</span><b></b><span>XAMPP</span><b></b><span>ORM</span><b></b><span>Migrations</span><b></b><span>SQL</span><b></b><span>Git</span><b></b><span>Power BI</span><b></b><span>Accessibility</span><b></b>
+      </div>
+    </div>
+  </div>
+  <!-- motion:end -->
+
+  <!-- ============ STACK ============ -->
+  <section id="stack">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">Toolbox</div>
+        <h2>What I work with</h2>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-card reveal">
+          <h4>Languages</h4>
+          <ul><li>Python</li><li>SQL</li><li>JavaScript</li><li>HTML5</li><li>CSS3</li></ul>
+        </div>
+        <div class="stack-card reveal">
+          <h4>Frameworks</h4>
+          <ul><li>Django 6</li><li>Django 5.2</li><li>Bootstrap 5</li><li>jQuery</li></ul>
+        </div>
+        <div class="stack-card reveal">
+          <h4>Data</h4>
+          <ul><li>MySQL</li><li>MariaDB</li><li>XAMPP</li><li>phpMyAdmin</li><li>SQLite</li></ul>
+        </div>
+        <div class="stack-card reveal">
+          <h4>Design</h4>
+          <ul><li>Glassmorphism</li><li>Design tokens</li><li>Responsive UI</li><li>Accessibility</li></ul>
+        </div>
+        <div class="stack-card reveal">
+          <h4>Practice</h4>
+          <ul><li>Django tests</li><li>Adversarial testing</li><li>Git</li><li>ORM &amp; migrations</li></ul>
+        </div>
+        <div class="stack-card reveal">
+          <h4>Also</h4>
+          <ul><li>Power BI</li><li>Excel reporting</li><li>Mermaid diagrams</li><li>ERD / DFD</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">About</div>
+        <h2>Backend, database and the screen people touch</h2>
+      </div>
+      <div class="about">
+        <div class="reveal">
+          <p>
+            I like building the whole loop, not just the database part: the
+            <strong>models and migrations</strong>, the <strong>role-based views</strong> that guard
+            them, and the <strong>interface</strong> that makes the rules obvious instead of
+            confusing.
+          </p>
+          <p>
+            Both systems sit on a stack schools already run — <strong>Python, Django and MySQL over
+            XAMPP</strong> — which keeps them maintainable by whoever picks them up next.
+          </p>
+          <p>
+            On the front end I build my own design system rather than leaning entirely on a
+            framework: shared colour, glass and motion tokens, keyboard-visible focus states, and
+            reduced-motion support, so every screen in a system feels like the same product.
+          </p>
+        </div>
+        <div class="note reveal">
+          <h4>How I work</h4>
+          <ul>
+            <li>Roles and permissions designed before the first view</li>
+            <li>Migrations and seed data so a fresh install is usable</li>
+            <li>Automated tests, including adversarial cases</li>
+            <li>System diagrams: context, DFD, ERD and flowchart</li>
+            <li>Real screenshots and honest empty states</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-card reveal">
+        <div class="kicker">Contact</div>
+        <h2>Let's build something useful</h2>
+        <p>
+          Available for internships, freelance Django work, and campus system projects.
+          The fastest way to reach me is email.
+        </p>
+        <div class="contact-actions">
+          <a class="realistic-btn" href="mailto:cjadebadua117@gmail.com">
+            <span class="btn-edge"></span>
+            <span class="btn-front">Email me</span>
+          </a>
+          <a class="mail" href="mailto:cjadebadua117@gmail.com">cjadebadua117@gmail.com</a>
+          <a class="mail" href="https://github.com/cjadebadua117-sys" target="_blank" rel="noopener">github.com/cjadebadua117-sys</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Christian Jade Badua</span>
+    <span>Built with HTML, CSS and a little JavaScript — no framework.</span>
+  </div>
+</footer>
+
+<script>/*__VENDOR_GSAP__*/</script>
+<script>/*__VENDOR_SCROLLTRIGGER__*/</script>
+<script>/*__VENDOR_SPLITTEXT__*/</script>
+<script>/*__VENDOR_LENIS__*/</script>
+<script>
+/* ============================================================
+   MOTION
+   Everything is additive: if any of this fails, the catch at the
+   bottom strips the preloader and reveals every section, so the
+   page always ends up readable.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var G = window.gsap;
+  var ST = window.ScrollTrigger;
+  var LenisCtor = window.Lenis;
+
+  function showEverything() {
+    var pre = document.querySelector('.preloader');
+    if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  if (!G || !ST || !LenisCtor || reduce) {
+    showEverything();
+    return;
+  }
+
+  try {
+    start();
+  } catch (err) {
+    showEverything();
+    if (window.console) { console.warn('[motion] falling back to static page:', err); }
+  }
+
+  function start() {
+    G.registerPlugin(ST);
+    root.classList.add('has-motion');
+
+    /* ---------- smooth scrolling ---------------------------- */
+    var lenis = new LenisCtor({
+      duration: 1.05,
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.7
+    });
+    lenis.on('scroll', ST.update);
+    G.ticker.add(function (time) { lenis.raf(time * 1000); });
+    G.ticker.lagSmoothing(0);
+    lenis.stop();
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (ev) {
+        var id = a.getAttribute('href');
+        if (!id || id.length < 2) { return; }
+        var target = document.querySelector(id);
+        if (!target) { return; }
+        ev.preventDefault();
+        lenis.scrollTo(target, { offset: -70, duration: 1.1 });
+      });
+    });
+
+    /* ---------- mobile menu (unchanged behaviour) ----------- */
+    var menuBtn = document.getElementById('menuBtn');
+    var navLinks = document.getElementById('navLinks');
+    if (menuBtn && navLinks) {
+      menuBtn.addEventListener('click', function () {
+        var open = navLinks.classList.toggle('open');
+        menuBtn.setAttribute('aria-expanded', String(open));
+      });
+      navLinks.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { navLinks.classList.remove('open'); });
+      });
+    }
+
+    /* ---------- screenshot thumbnails ----------------------- */
+    document.querySelectorAll('.thumbs').forEach(function (group) {
+      var main = document.getElementById(group.dataset.for);
+      group.querySelectorAll('.thumb').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (main) { main.src = btn.dataset.src; }
+          group.querySelectorAll('.thumb').forEach(function (b) { b.classList.remove('on'); });
+          btn.classList.add('on');
+        });
+      });
+    });
+
+    /* ---------- preloader + hero intro ---------------------- */
+    var pre = document.querySelector('.preloader');
+    var counter = document.querySelector('.preloader-count');
+    var bar = document.querySelector('.preloader-bar i');
+    var heroH1 = document.querySelector('.hero h1');
+    var intro = G.timeline({ defaults: { ease: 'power3.out' } });
+    var tick = { v: 0 };
+    var revealAt = 0.12;
+
+    /* Opened in a background tab? Browsers throttle requestAnimationFrame
+       there, which would freeze this timeline until the failsafe. Drop the
+       curtain immediately instead of showing a stalled counter. */
+    if (pre && document.hidden) { pre.remove(); pre = null; }
+
+    if (pre) {
+      revealAt = 1.78;
+      intro.to(tick, {
+        v: 100, duration: 1.15, ease: 'power2.inOut',
+        onUpdate: function () { if (counter) { counter.textContent = String(Math.round(tick.v)); } }
+      }, 0)
+      .to(bar, { scaleX: 1, duration: 1.15, ease: 'power2.inOut' }, 0)
+      .to('.preloader-inner', { y: -20, opacity: 0, duration: .45, ease: 'power2.in' }, 1)
+      .to(pre, {
+        yPercent: -100, duration: .85, ease: 'expo.inOut',
+        onComplete: function () { pre.remove(); lenis.start(); }
+      }, 1.2);
+    } else {
+      lenis.start();
+    }
+
+    var heroWords = null;
+    if (heroH1 && window.SplitText) {
+      try {
+        heroWords = new SplitText(heroH1, { type: 'lines,words', mask: 'lines' }).words;
+      } catch (e) { heroWords = null; }
+    }
+    if (heroWords && heroWords.length) {
+      intro.from(heroWords, { yPercent: 120, duration: 1, stagger: .05, ease: 'expo.out' }, revealAt);
+    }
+    intro.from('.hero .lede', { y: 26, opacity: 0, duration: .85 }, revealAt + .2)
+         .from('.hero .cta-row', { y: 20, opacity: 0, duration: .75 }, revealAt + .35)
+         .from('.stats .stat', { y: 20, opacity: 0, duration: .65, stagger: .08 }, revealAt + .45);
+
+    document.querySelectorAll('.stats .stat b').forEach(function (b, i) {
+      var finalText = b.textContent.trim();
+      var target = parseInt(finalText, 10);
+      if (isNaN(target)) { return; }
+      var o = { v: 0 };
+      intro.to(o, {
+        v: target, duration: 1.2, ease: 'power2.out',
+        onUpdate: function () { b.textContent = String(Math.round(o.v)); },
+        onComplete: function () { b.textContent = finalText; }
+      }, revealAt + .5 + i * .08);
+    });
+
+    /* ---------- scroll reveals ------------------------------ */
+    ST.batch('.reveal:not(.stack-card)', {
+      start: 'top 88%',
+      once: true,
+      onEnter: function (batch) {
+        G.to(batch, { opacity: 1, y: 0, duration: .9, stagger: .09, ease: 'power3.out', overwrite: true });
+      }
+    });
+
+    G.fromTo('.stack-card',
+      { y: 48, opacity: 0, rotate: -1.2 },
+      {
+        y: 0, opacity: 1, rotate: 0, duration: .85, stagger: .07, ease: 'power3.out',
+        scrollTrigger: { trigger: '.stack-grid', start: 'top 86%', once: true }
+      });
+
+    if (window.SplitText) {
+      document.querySelectorAll('.sec-head h2, .contact-card h2').forEach(function (h) {
+        try {
+          var lines = new SplitText(h, { type: 'lines', mask: 'lines' }).lines;
+          G.from(lines, {
+            yPercent: 115, duration: .95, stagger: .1, ease: 'expo.out',
+            scrollTrigger: { trigger: h, start: 'top 92%', once: true }
+          });
+        } catch (e) { /* heading stays as plain text */ }
+      });
+    }
+
+    /* ---------- screenshot reveals -------------------------- */
+    document.querySelectorAll('.shot').forEach(function (shot) {
+      G.fromTo(shot,
+        { clipPath: 'inset(15% 8% 15% 8% round 14px)' },
+        {
+          clipPath: 'inset(0% 0% 0% 0% round 14px)', ease: 'none',
+          scrollTrigger: { trigger: shot, start: 'top 94%', end: 'top 42%', scrub: .4 }
+        });
+    });
+
+    /* ---------- reading progress ---------------------------- */
+    G.to('.progress', {
+      scaleX: 1, ease: 'none',
+      scrollTrigger: { start: 0, end: 'max', scrub: .25 }
+    });
+
+    /* ---------- desktop-only motion ------------------------- */
+    var mm = G.matchMedia();
+
+    mm.add('(min-width: 900px)', function () {
+      G.timeline({
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: .6 }
+      })
+      .to('.hero h1', { yPercent: -14, scale: .93, opacity: .28, ease: 'none' }, 0)
+      .to('.hero .lede, .hero .cta-row', { yPercent: -34, opacity: 0, ease: 'none' }, 0)
+      .to('.hero .stats', { yPercent: -72, opacity: 0, ease: 'none' }, 0);
+
+      document.querySelectorAll('.shot').forEach(function (shot) {
+        var img = shot.querySelector('img');
+        if (!img) { return; }
+        G.set(img, { scale: 1.09 });
+        G.fromTo(img, { yPercent: -4 }, {
+          yPercent: 4, ease: 'none',
+          scrollTrigger: { trigger: shot, start: 'top bottom', end: 'bottom top', scrub: true }
+        });
+      });
+    });
+
+    /* ---------- magnetic controls + pointer aura ------------ */
+    mm.add('(min-width: 900px) and (hover: hover) and (pointer: fine)', function () {
+      document.querySelectorAll('.realistic-btn, .ghost-link').forEach(function (el) {
+        var xTo = G.quickTo(el, 'x', { duration: .45, ease: 'power3' });
+        var yTo = G.quickTo(el, 'y', { duration: .45, ease: 'power3' });
+        function move(e) {
+          if (window.innerWidth < 900) { return; }
+          var r = el.getBoundingClientRect();
+          xTo((e.clientX - (r.left + r.width / 2)) * .22);
+          yTo((e.clientY - (r.top + r.height / 2)) * .35);
+        }
+        function reset() { xTo(0); yTo(0); }
+        el.addEventListener('pointermove', move);
+        el.addEventListener('pointerleave', reset);
+      });
+
+      document.querySelectorAll('.shot').forEach(function (shot) {
+        var img = shot.querySelector('img');
+        if (!img) { return; }
+        shot.addEventListener('pointerenter', function () {
+          if (window.innerWidth < 900) { return; }
+          G.to(img, { scale: 1.15, duration: .7, ease: 'power3.out' });
+        });
+        shot.addEventListener('pointerleave', function () {
+          G.to(img, { scale: window.innerWidth < 900 ? 1 : 1.09, duration: .7, ease: 'power3.out' });
+        });
+      });
+
+      var aura = document.querySelector('.cursor-aura');
+      var dot = document.querySelector('.cursor-dot');
+      if (aura && dot) {
+        root.classList.add('has-cursor');
+        var ax = G.quickTo(aura, 'x', { duration: .5, ease: 'power3' });
+        var ay = G.quickTo(aura, 'y', { duration: .5, ease: 'power3' });
+        var dx = G.quickTo(dot, 'x', { duration: .1, ease: 'power2' });
+        var dy = G.quickTo(dot, 'y', { duration: .1, ease: 'power2' });
+        window.addEventListener('pointermove', function (e) {
+          ax(e.clientX); ay(e.clientY); dx(e.clientX); dy(e.clientY);
+        }, { passive: true });
+        document.querySelectorAll('a, button').forEach(function (el) {
+          el.addEventListener('pointerenter', function () { aura.classList.add('is-active'); });
+          el.addEventListener('pointerleave', function () { aura.classList.remove('is-active'); });
+        });
+      }
+    });
+
+    /* ---------- header hides while reading down ------------- */
+    var header = document.querySelector('header');
+    var lastY = 0;
+    lenis.on('scroll', function (e) {
+      var y = e.scroll;
+      if (header) {
+        if (y > 260 && y > lastY + 6) { header.classList.add('is-hidden'); }
+        else if (y < lastY - 6 || y < 140) { header.classList.remove('is-hidden'); }
+      }
+      lastY = y;
+    });
+
+    /* ---------- keep triggers honest ------------------------ */
+    window.addEventListener('load', function () { ST.refresh(); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { ST.refresh(); });
+    }
+
+    /* last-resort: never leave the curtain up */
+    window.setTimeout(function () {
+      var stuck = document.querySelector('.preloader');
+      if (stuck) { stuck.remove(); lenis.start(); }
+    }, 8000);
+  }
+})();
+</script>
+</body>
+</html>
