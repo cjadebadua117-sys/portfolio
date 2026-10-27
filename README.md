@@ -26,6 +26,13 @@ Served by GitHub Pages from the public repo
 `cjadebadua117-sys/cjadebadua117-sys.github.io` (branch `main`, `/` root). It
 stays online whether this laptop is on or not.
 
+**Source repository:** https://github.com/cjadebadua117-sys/portfolio
+
+The editable source, the generators, the QR codes and the finished page (as
+`index.html`) all live there. `site/` is deliberately left out: it is a
+separate git repo whose whole job is to publish the bare
+`cjadebadua117-sys.github.io` address, so the two histories never collide.
+
 **Every edit:**
 
 ```
@@ -177,6 +184,7 @@ twin, so any content edit has to be built and imported again.
 
 ```
 Portfolio/
+├── index.html                            <- copy of the page GitHub serves at the repo root
 ├── Christian-Jade-Badua-Portfolio.html   <- the deliverable (generated)
 ├── Christian-Jade-Badua-Portfolio-Canva.html  <- static twin for Canva import (generated)
 ├── README.md
